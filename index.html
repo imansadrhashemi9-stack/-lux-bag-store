@@ -1,1 +1,90 @@
-
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LUX BAG | فروشگاه کیف و کفش</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Tahoma,Arial;background:#faf8f3;color:#29251f}
+header{background:#201d19;color:white;padding:20px 6%;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:15px}
+.logo{font-size:25px;font-weight:bold;letter-spacing:3px;color:#e5c78e}
+nav a{color:white;text-decoration:none;margin:0 10px}
+.hero{text-align:center;padding:75px 15px;background:linear-gradient(90deg,#eee4d4,#faf7f0)}
+.hero h1{font-size:34px;margin:0 0 15px}
+.hero p{color:#665d51;line-height:2}
+.btn{background:#a9824c;color:white;border:0;padding:12px 25px;border-radius:5px;cursor:pointer}
+section{padding:35px 6%}
+h2{text-align:center;margin-bottom:25px}
+.categories,.products{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:20px}
+.cat,.product{background:white;border-radius:12px;overflow:hidden;text-align:center;box-shadow:0 3px 15px #00000010;padding-bottom:18px}
+.cat{padding:25px;cursor:pointer}
+.cat span{font-size:35px}
+.product img{width:100%;height:220px;object-fit:cover}
+.product h3{margin:14px 5px}
+.price{color:#a9824c;font-weight:bold}
+.search{display:block;width:min(100%,400px);margin:20px auto;padding:13px;border:1px solid #ddd;border-radius:8px;font-size:15px}
+.product button{margin-top:12px}
+#cart{background:#eee5d8;padding:18px;text-align:center;line-height:2}
+footer{background:#201d19;color:white;text-align:center;padding:30px;line-height:2}
+</style>
+</head>
+<body>
+<header>
+<div class="logo">LUX BAG</div>
+<nav><a href="#home">خانه</a><a href="#products">محصولات</a><a href="#about">درباره ما</a></nav>
+<div>🛍️ سبد خرید: <span id="count">۰</span></div>
+</header>
+<div class="hero" id="home">
+<h1>زیبایی در انتخاب توست</h1>
+<p>جدیدترین مدل‌های کیف و کفش با طراحی خاص و شیک</p>
+<a href="#products"><button class="btn">مشاهده محصولات</button></a>
+</div>
+<section>
+<h2>دسته‌بندی محصولات</h2>
+<div class="categories">
+<div class="cat" onclick="filterProducts('کیف')"><span>👜</span><h3>انواع کیف</h3></div>
+<div class="cat" onclick="filterProducts('کفش')"><span>👠</span><h3>انواع کفش</h3></div>
+<div class="cat" onclick="filterProducts('همه')"><span>✨</span><h3>همه محصولات</h3></div>
+</div>
+</section>
+<section id="products">
+<h2>محصولات فروشگاه</h2>
+<input class="search" id="search" placeholder="جست‌وجوی کیف یا کفش..." oninput="renderProducts()">
+<div class="products" id="list"></div>
+</section>
+<div id="cart">
+<h3>🛒 سبد خرید شما</h3>
+<div id="cartItems">هنوز محصولی انتخاب نکرده‌اید.</div>
+<strong id="total">مجموع: ۰ تومان</strong>
+</div>
+<section id="about">
+<h2>درباره فروشگاه LUX BAG</h2>
+<p style="text-align:center;line-height:2">ما در LUX BAG تلاش می‌کنیم انتخاب کیف و کفش را برای شما به تجربه‌ای زیبا و لذت‌بخش تبدیل کنیم.</p>
+</section>
+<footer>فروشگاه اینترنتی LUX BAG<br>زیبایی، کیفیت و انتخاب خاص</footer>
+<script>
+const products=[
+{name:"کیف دستی زنانه",type:"کیف",price:1250000,img:"https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=600"},
+{name:"کیف شانه‌ای",type:"کیف",price:980000,img:"https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600"},
+{name:"کفش اسپرت",type:"کفش",price:1750000,img:"https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600"},
+{name:"کفش پاشنه‌دار",type:"کفش",price:2100000,img:"https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=600"}
+];
+let selected="همه",cart=[];
+function money(n){return n.toLocaleString("fa-IR")+" تومان"}
+function renderProducts(){
+let q=document.getElementById("search").value.trim();
+let filtered=products.filter(p=>(selected==="همه"||p.type===selected)&&p.name.includes(q));
+document.getElementById("list").innerHTML=filtered.map(p=>'<div class="product"><img src="'+p.img+'" alt="'+p.name+'"><h3>'+p.name+'</h3><div class="price">'+money(p.price)+'</div><button class="btn" onclick="addCart(\''+p.name+'\')">افزودن به سبد خرید</button></div>').join("")||"محصولی پیدا نشد.";
+}
+function filterProducts(type){selected=type;renderProducts();document.getElementById("products").scrollIntoView({behavior:"smooth"})}
+function addCart(name){let p=products.find(x=>x.name===name);cart.push(p);updateCart()}
+function updateCart(){
+document.getElementById("count").textContent=cart.length.toLocaleString("fa-IR");
+document.getElementById("cartItems").innerHTML=cart.length?cart.map(p=>p.name+" — "+money(p.price)).join("<br>"):"هنوز محصولی انتخاب نکرده‌اید.";
+document.getElementById("total").textContent="مجموع: "+money(cart.reduce((s,p)=>s+p.price,0));
+}
+renderProducts();
+</script>
+</body>
+</html>
